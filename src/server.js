@@ -1,6 +1,6 @@
 import express from 'express';
 import 'dotenv/config';
-import exemplosRoutes from './routes/exemploRoute.js';
+import quartosRoutes from './routes/quartosRoutes'
 
 import pdfRoute from './routes/pdfRoutes.js'
 
@@ -13,8 +13,7 @@ app.get('/', (req, res) => {
     res.send('🚀 API funcionando');
 });
 
-// Rotas
-app.use('/api', exemplosRoutes);
+app.use('/quartos', quartosRoutes)
 
 app.use('/quartos', pdfRoute);
 app.use('/uploads', express.static('uploads'));
