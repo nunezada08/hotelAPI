@@ -1,20 +1,20 @@
-import hospedesModel from '../models/hospedesModel.js';
-import { gerarPdfTodos, gerarPdfAluno } from '../utils/pdfHelper.js';
+import quartosModel from '../models/quartosModel.js';
+import { gerarPdfQuarto, gerarPdfTodos } from '../utils/pdfHelper.js';
 
 export const relatorioTodos = async (req, res) => {
     try {
-        const hospedes = await hospedesModel.buscarTodos();
+        const quartos = await quartosModel.buscarTodos();
 
-        if (!hospedes || hospedes.length === 0) {
-            return res.status(404).json({ error: 'Nenhum hospede encontrado!' });
+        if (!quartos || quartos.length === 0) {
+            return res.status(404).json({ error: 'Nenhum quarto encontrado!' });
         }
 
-        const pdf = await gerarPdfTodos(hospedes);
+        const pdf = await gerarPdfTodos(quartos);
 
         return res
             .set({
                 'Content-Type': 'application/pdf',
-                'Content-Disposition': `inline; filename="hospedes_relatorio.pdf"`,
+                'Content-Disposition': `inline; filename="quartos_relatorio.pdf"`,
             })
             .send(pdf);
     } catch (error) {
@@ -31,17 +31,17 @@ export const relatorioPorId = async (req, res) => {
             return res.status(400).json({ error: 'O ID enviado não é um número válido.' });
         }
 
-        const hospede = await hospedesModel.buscarPorId(parseInt(id));
+        const quarto = await quartosModel.buscarPorId(parseInt(id));
 
-        if (!hospede) {
+        if (!quarto) {
             return res.status(404).json({ error: 'Registro não encontrado.' });
         }
 
-        const pdf = await gerarPdfAluno(hospede);
+        const pdf = await gerarPdfQuarto(quarto);
         return res
             .set({
                 'Content-Type': 'application/pdf',
-                'Content-Disposition': `inline; filename="hospede_${id}.pdf"`,
+                'Content-Disposition': `inline; filename="quarto_${id}.pdf"`,
             })
 
             .send(pdf);
