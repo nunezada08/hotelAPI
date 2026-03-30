@@ -2,6 +2,8 @@ import express from 'express';
 import 'dotenv/config';
 import quartosRoutes from './routes/quartosRoutes'
 
+import pdfRoute from './routes/pdfRoutes.js'
+
 const app = express();
 app.use(express.json());
 
@@ -14,6 +16,11 @@ app.get('/', (req, res) => {
 // Rotas
 
 app.use('/quartos', quartosRoutes)
+
+
+app.use('/alunos', pdfRoute);
+
+
 app.use('/uploads', express.static('uploads'));
 
 app.use((req, res) => {
