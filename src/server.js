@@ -13,14 +13,9 @@ app.get('/', (req, res) => {
     res.send('🚀 API funcionando');
 });
 
-// Rotas
-
 app.use('/quartos', quartosRoutes)
 
-
-app.use('/alunos', pdfRoute);
-
-
+app.use('/quartos', pdfRoute);
 app.use('/uploads', express.static('uploads'));
 
 app.use((req, res) => {
