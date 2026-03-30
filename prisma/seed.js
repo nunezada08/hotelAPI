@@ -2,6 +2,7 @@ import pg from 'pg';
 import 'dotenv/config';
 import pkg from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import CategoriaQuartos from '@prisma/client';
 
 const { PrismaClient } = pkg;
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
@@ -18,6 +19,27 @@ async function main() {
 
     await prisma.hospedes.createMany({
         data: [
+            {
+                nome: 'Taylor Swift',
+                email: 'taylor@era-tour.com',
+                telefone: '11 99999-88',
+                cep: '01310-100',
+                logradouro: 'Avenida Paulista',
+                bairro: 'Bela Vista',
+                localidade: 'São Paulo',
+                uf: 'SP',
+                quartos: {
+                    create: [
+                        {
+                            nome: 'Suíte 13',
+                            descricao: 'Vista panorâmica e isolamento acústico total.',
+                            cateoria: CategoriaQuartos.SUITE,
+                            preco: 45.799,
+                            disponivel: false,
+                        },
+                    ],
+                },
+            },
         ],
     });
 }
