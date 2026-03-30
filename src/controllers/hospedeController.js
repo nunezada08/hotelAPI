@@ -1,5 +1,7 @@
 import HospedeModel from '../models/HospedeModel.js';
 
+
+
 export const criar = async (req, res) => {
     try {
         if (!req.body) {
