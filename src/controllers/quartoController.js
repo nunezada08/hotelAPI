@@ -5,7 +5,7 @@ export const criar = async (req, res) => {
     try {
         if (!req.body) {
             return res.status(400).json({ error: 'Corpo da requisição vazio. Envie os dados sobre o quarto!' });
-        }
+        } 
 
         const { nome, descricao, categoria, disponivel,preco } = req.body;
 

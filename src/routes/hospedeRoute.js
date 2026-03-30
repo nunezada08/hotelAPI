@@ -1,12 +1,12 @@
 import express from 'express';
-import * as controller from '../controllers/exemploController.js';
+import * as controller from '../controllers/hospedeController.js';
 
 const router = express.Router();
 
-router.post('/exemplos', controller.criar);
-router.get('/exemplos', controller.buscarTodos);
-router.get('/exemplos/:id', controller.buscarPorId);
-router.put('/exemplos/:id', controller.atualizar);
-router.delete('/exemplos/:id', controller.deletar);
+router.post('/hospedes', controller.criar);
+router.get('/hospedes', controller.buscarTodos);
+router.get('/hospedes/:id', controller.buscarPorId);
+router.put('/hospedes/:id', controller.atualizar);
+router.delete('/hospedes/:id', controller.deletar);
 
 export default router;
