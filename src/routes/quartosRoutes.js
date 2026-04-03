@@ -9,10 +9,11 @@ router.post('/:id/foto', upload.single('foto'), controller.uploadFoto);
 router.get('/:id/foto', controller.buscarPorId);
 
 // Quartos routes
-router.post('/quartos', controller.criar);
-router.get('/quartos', controller.buscarTodos);
-router.get('/quartos/:id', controller.buscarPorId);
-router.put('/quartos/:id', controller.atualizar);
-router.delete('/quartos/:id', controller.deletar);
+router.post('/', controller.criar);
+router.get('/', controller.buscarTodos);
+router.get('/:id', controller.buscarPorId);
+router.put('/:id', controller.atualizar);
+router.delete('/:id', controller.deletar);
+router.delete('/:id', controller.deletar);
 
 export default router;
