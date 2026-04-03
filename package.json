@@ -1,7 +1,7 @@
 {
-  "name": "hotelAPI",
+  "name": "hotelApi",
   "version": "1.0.0",
-  "description": "atividade backend",
+  "description": "",
   "main": "server.js",
   "type": "module",
   "private": true,
@@ -9,7 +9,7 @@
     "dev": "cls && nodemon src/server.js"
   },
   "keywords": [],
-  "author": "nathalia/vitor/ana/julia/matheus/isabella",
+  "author": "Matheus Gomes Leitão",
   "license": "MIT",
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",

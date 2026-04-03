@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 app.use("/quartos", quartosRoutes);
 
 app.use("/quartos", pdfRoute);
-app.use("/uploads", express.static("uploads"));
+app.use("/", express.static("uploads"));
 
 app.use((req, res) => {
   res.status(404).json({ error: "Rota não encontrada" });
