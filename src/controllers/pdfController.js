@@ -1,6 +1,21 @@
 import quartosModel from "../models/quartosModel.js";
 import { gerarPdfQuarto, gerarPdfTodos } from "../utils/pdfHelper.js";
 
+/**
+ * @typedef {object} reqBodyPdf
+ */
+
+/**
+ * GET /quartos/relatorio/pdf
+ * @tags Quartos
+ * @summary Busca todos os registros de relatório de quartos e converte-os para PDF
+ * @description EndPoint responsável por buscar quartos cadastrados no sisema web e transformá-los em PDF
+ * 
+ * @return 200 - Quartos encontrados e convertidos com sucesso
+ * @return 404 - Quartos não encontrados
+ * @return 500 - Erro interno do servidor
+ */
+
 export const relatorioTodos = async (req, res) => {
   try {
     const quartos = await quartosModel.buscarTodos();
@@ -22,6 +37,20 @@ export const relatorioTodos = async (req, res) => {
     return res.status(500).json({ error: "Erro ao gerar relatório." });
   }
 };
+
+/**
+ * GET /quartos/relatorio/{id}
+ * @tags Quartos
+ * @summary Busca um registro de relatório de quarto e converte-o para PDF através do ID
+ * @description EndPoint responsável por buscar quartos cadastrados no sisema web e transformá-los em PDF por ID
+ * 
+ * @param {integer} id.path.required
+ * 
+ * @return 200 - Quarto encontrado e convertido com sucesso
+ * @return 400 - Dados inválidos
+ * @return 404 - Quarto não encontrado
+ * @return 500 - Erro interno do servidor
+ */
 
 export const relatorioPorId = async (req, res) => {
   try {
