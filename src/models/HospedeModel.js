@@ -27,24 +27,74 @@ export default class HospedeModel {
     }
 
     validarCampos() {
-        if (!this.nome || this.nome.trim().length < 3 || this.nome.trim().length > 100) {
+        if (!this.nome || this.nome.length < 3 || this.nome.length > 100) {
             throw new Error("Nome deve ter entre 3 a 100 caracteres");
         }
-        if (!this.email || !/^[^\s@]+@[^\s@].[^\s@]+$/.test(this.email.trim())) {
-            throw new Error("Email obrigatório e deve ser válido");
+        if (!this.email) {
+            throw new Error("Email é obrigatório");
         }
-        if (!this.cpf || !/^\d{11}$/.test(this.cpf.trim())) {
-            throw new Error("CPF obrigatório e deve ter 11 dígitos");
+        if (!this.cep ) {
+            throw new Error("CEP obrigatório e deve ter 11 dígitos");
         }
+        if (this.ativo === false) {
+            throw  new Error('Operação não permitida: cliente inativo')
+        }
+
+        let cep = '';
+        if (this.cep) {
+            const cepString = String(this.cep);
+            for (let i = 0; i < cepString.length; i++) {
+                const caractere = cepString[i];
+                if(caractere >= '0' && caractere <= '9') {
+                    cep += caractere;
+                }
+            }
+        }
+
+        if(cep.length !== 11) {
+            throw new Error('O campo "cep" deve conter 11 dígitos numericos.')
+        }
+        if(this.localidade) {
+            throw new Error('O campo "localidade" é obrigatório.')
+        }
+
+        this.cep = cep
     }
 
-    validarAtivo() {
-        if (!this.ativo) {
-            throw new Error("Operação não permitida: usuário inativo")
+    async enderecoPorCep() {
+        if (!this.cep) return;
+
+        let cep = '';
+        const cepString = String(this.cep);
+        for (let i = 0; i < cepString.length; i++) {
+            const caractere = cepString[i];
+            if (caractere >= '0' && caractere <= '9') {
+                cep += caractere;
+            } 
+        }
+
+        try {
+            const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json`); 
+            
+            const dados = await resposta.json();
+
+            if(dados.erro) {
+                throw new Error('CEP não encontrado.');
+            }
+
+            this.logradouro = dados.logradouro || null;
+            this.bairro = dados.bairro || null;
+            this.localidade = dados.localidade || null;
+            this.uf = dados.uf || null;
+        } catch {
+            throw new Error('Erro ao buscar endereco pelo CEP: ' + error.message);
         }
     }
 
     async criar() {
+        this.validarCampos()
+        await this.enderecoPorCep();
+
         return prisma.hospede.create({
             data: {
                 nome: this.nome,
@@ -61,19 +111,33 @@ export default class HospedeModel {
     }
 
     async atualizar() {
+        if(this.ativo === false) {
+            throw new Error('Operação não permitida: hospede inativo');
+        }
+
         this.validarCampos();
-        this.validarAtivo();
+            if (this.cep) await this.enderecoPorCep();
+
         return prisma.hospede.update({
             where: { id: this.id },
             data: {
                 nome: this.nome,
                 email: this.email,
-                cpf: this.cpf,
+                telefone: this.telefone,
+                cep: this.cep,
+                logradouro: this.logradouro,
+                bairro: this.bairro,
+                localidade: this.localidade,
+                uf: this.uf,
+                ativo: this.ativo
             },
         });
     }
 
     async deletar() {
+        if(this.ativo == false) {
+            throw new Error('Operação não permitida: cliente inativo');
+        }
         return prisma.hospede.delete({ where: { id: this.id } });
     }
 
@@ -83,14 +147,27 @@ export default class HospedeModel {
         if (filtros.nome) {
             where.nome = { contains: filtros.nome, mode: 'insensitive' };
         }
+
         if (filtros.email) {
             where.email = { contains: filtros.email, mode: 'insensitive' };
-            if (filtros.ativo !== undefined) {
-                where.ativo = filtros.ativo === 'true';
-            }
+        }
+        if (filtros.cpf) {
+            where.cpf = { contains: filtros.cpf, mode: 'insensitive' };
+        }
+        if (filtros.dominio) {
+            where.email = {
+                endWith: `@${String(filtros.dominio).toLowerCase()}`,
+                mode: 'insensitive',
+            };
+        }
+        if (filtros.localidade) {
+            where.localidade = { contains: filtros.localidade, mode: 'insensitive'};
+        }
+        if (filtros.ativo !== undefined) {
+            where.ativo = filtros.ativo === 'true';
+        }
 
             return prisma.hospede.findMany({ where });
-        }
     }
     static async buscarPorId(id) {
         const data = await prisma.hospede.findUnique({ where: { id } });
