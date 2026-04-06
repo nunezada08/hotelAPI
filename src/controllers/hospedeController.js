@@ -3,15 +3,22 @@ import HospedeModel from "../models/HospedeModel.js";
 /**
  * @typedef {object} reqBodyHospede
  * @property {string} nome.required
- * @property {string} .required
- * @property {string} localidade
+ * @property {string} email.required
+ * @property {string} telefone.required
+ * @property {string} cep.required
+ * @property {boolean} ativo.required
  */
 
 /**
- * 
- * @param {*} req 
- * @param {*} res 
- * @returns 
+ * POST /api/hospedes
+ * @tags Hospedes
+ * @summary Cria um novo registro de hospede
+ * @description EndPoint responsável por cadastrar um novo hospede no sistema web.
+ * @param {reqBodyHospede} request.body.required
+ *
+ * @return 201 - Hospede criado com sucesso
+ * @return 400 - Dados inválidos ou campos obrigatórios não informados
+ * @return 500 - Erro interno no servidor
  */
 
 export const criar = async (req, res) => {
@@ -64,6 +71,21 @@ export const criar = async (req, res) => {
   }
 };
 
+/**
+ * GET /api/hospedes
+ * @tags Hospedes
+ * @summary Busca todos os registros de hospedes
+ * @description EndPoint responsável por buscar hospedes cadastrados no sistema web.
+ * Permite filtrar os resultados utilizando parâmetros de consulta (query params).
+ *
+ * @param {string} nome.query
+ * @param {string} nome.query
+ * @param {string} email.query
+ * @param {string} telefone.query
+ * @param {string} cep.query
+ * @param {boolean} ativo.query
+ */
+
 export const buscarTodos = async (req, res) => {
   try {
     const hospedes = await HospedeModel.buscarTodos(req.query);
@@ -78,6 +100,19 @@ export const buscarTodos = async (req, res) => {
     return res.status(500).json({ error: "Erro ao buscar hospedes." });
   }
 };
+
+/**
+ * GET /api/hospedes/{id}
+ * @tags Hospedes
+ * @summary Busca um registro de hospede por ID
+ * @description EndPoint responsável por buscar um hospede específico cadastrado no sistema web a partir do ID.
+ * @param {integer} id.path.required
+ *
+ * @return 200 - Hospede encontrado com sucesso
+ * @return 400 - Dados inválidos ou campos obrigatórios não informados
+ * @return 404 - ID não encontrado
+ * @return 500 - Erro interno do servidor
+ */
 
 export const buscarPorId = async (req, res) => {
   try {
@@ -101,6 +136,21 @@ export const buscarPorId = async (req, res) => {
     return res.status(500).json({ error: "Erro ao buscar hospede." });
   }
 };
+
+/**
+ * PUT /api/hospedes/{id}
+ * @tags Hospedes
+ * @summary Atualizar um registro de hospede por id
+ * @description Endpoint responsável por atualizar hospede específico pelo seu ID.
+ * @param {integer} id.path.required
+ *@param {reqBodyHospede} request.body.required
+ *
+ *
+ * @return 200 - ID do hospede encontrado
+ * @return 400 - Dados inválidos ou campos obrigatórios não informados
+ * @return 404 - Erro ao atualizar ID do registro
+ * @return 500 - Erro interno no servidor
+ */
 
 export const atualizar = async (req, res) => {
   try {
@@ -146,6 +196,19 @@ export const atualizar = async (req, res) => {
     return res.status(500).json({ error: "Erro ao atualizar hospede." });
   }
 };
+
+/**
+ * DELETE /api/hospedes/{id}
+ * @tags Hospedes
+ * @summary Deleta um registro de hospede por id
+ * @description Endpoint responsável por deletar hospede específico pelo seu ID.
+ * @param {integer} id.path.required
+ *
+ * @return 200 - ID do hospede encontrado
+ * @return 400 - Dados inválidos ou campos obrigatórios não informados
+ * @return 404 - Erro ao deletar ID do registro
+ * @return 500 - Erro interno no servidor
+ */
 
 export const deletar = async (req, res) => {
   try {

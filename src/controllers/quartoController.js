@@ -1,6 +1,16 @@
 import QuartosModel from "../models/QuartosModel.js";
 import { processarFoto, removerFoto } from "../utils/fotoHelper.js";
 
+/**
+ * @typedef {object} reqBodyQuarto
+ * @property {string} nome.required
+ * @property {string} descricao.required
+ * @property {boolean} disponivel.required
+ * @property {decimal} preco.required
+ * @property {boolean} foto.required
+ * @property {Integer} hospedeId.required
+ */
+
 export const uploadFoto = async (req, res) => {
   try {
     const { id } = req.params;
@@ -42,6 +52,17 @@ export const uploadFoto = async (req, res) => {
   }
 };
 
+/**
+ * POST /api/Quartos
+ * @tags Quartos
+ * @summary Cria um novo registro de quarto
+ * @description EndPoint responsável por cadastrar um novo quarto no sistema web
+ * @param {ReqBodyQuarto} request.body.required
+ *
+ * @return 201 - Quarto criado com sucesso
+ * @return 400 - Dados inválidos ou campos obrigatórios não informados
+ * @return 500 - Erro interno do servidor
+ */
 export const criar = async (req, res) => {
   try {
     if (!req.body) {
@@ -77,6 +98,25 @@ export const criar = async (req, res) => {
     return res.status(500).json({ error: "Erro ao processar a foto." });
   }
 };
+
+/**
+ * GET /api/quartos
+ * @tags Quartos
+ * @summary Busca todos os registros de Quartos
+ * @description EndPoint responsável por buscar todos os quartos cadastrados no sistema web.
+ * Permite filtrar os resultados utilizando parâmetros de consulta (query params).
+ * @param {string} nome.query
+ * @param {string} descricao.query
+ * @param {string} categoria.query
+ * @param {boolean} disponivel.query
+ * @param {decimal} preco.query
+ * @param {string} foto.query
+ * @param {boolean} HospedeId.query
+ *
+ * @return 201 - Quarto criado com sucesso
+ * @return 400 - Dados inválidos ou campos obrigatórios não informados
+ * @return 500 -  Erro interno do servidor
+ */
 export const buscarTodos = async (req, res) => {
   try {
     const registros = await QuartosModel.buscarTodos(req.query);
@@ -91,6 +131,20 @@ export const buscarTodos = async (req, res) => {
     return res.status(500).json({ error: "Erro ao buscar registros." });
   }
 };
+
+/**
+ * GET /quartos/{id}
+ * @tags Quartos
+ * @summary Busca um registro de quarto através do ID
+ * @description EndPoint responsável por buscar quartos cadastrados no sistema web por ID
+ *
+ * @param {integer} id.path.required
+ *
+ * @return 200 - Quarto encontrado com sucesso
+ * @return 400 - Dados inválidos
+ * @return 404 - Quarto não encontrado
+ * @return 500 - Erro interno do servidor
+ */
 
 export const buscarPorId = async (req, res) => {
   try {
@@ -114,6 +168,19 @@ export const buscarPorId = async (req, res) => {
     return res.status(500).json({ error: "Erro ao buscar registro." });
   }
 };
+
+/**
+ * PUT /api/quartos/{id}
+ * @tags Quartos
+ * @summary Atualiza um registro de quarto por id
+ * @description Endpoint responsável por buscar quarto específico pelo seu ID.
+ * @param {integer} id.path.required
+ *
+ * @return 200 - ID do quarto encontrado
+ * @return 400 - Dados inválidos ou campos obrigatórios não informados
+ * @return 404 - Erro ao buscar ID do registro
+ * @return 500 - Erro interno no servidor
+ */
 
 export const atualizar = async (req, res) => {
   try {
@@ -160,6 +227,19 @@ export const atualizar = async (req, res) => {
     return res.status(500).json({ error: "Erro ao atualizar registro." });
   }
 };
+
+/**
+ * DELETE /api/quartos/{id}
+ * @tags Quartos
+ * @summary Deleta um registro de quarto por ID
+ * @description EndPoint responsável por deletar um quarto específico cadastrado no sistema web a partir do ID.
+ * @param {integer} id.path.required
+ *
+ * @return 200 - Quarto deletado com sucesso
+ * @return 400 - Dados inválidos ou campos obrigatórios não informados
+ * @return 404 - ID não encontrado
+ * @return 500 - Erro interno do servidor
+ */
 
 export const deletar = async (req, res) => {
   try {
