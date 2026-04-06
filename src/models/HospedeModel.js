@@ -99,7 +99,7 @@ export default class HospedeModel {
         this.validarCampos();
         await this.enderecoPorCep();
 
-        return prisma.hospede.create({
+        return prisma.hospedes.create({
             data: {
                 nome: this.nome,
                 email: this.email,
@@ -122,7 +122,7 @@ export default class HospedeModel {
         this.validarCampos();
         if (this.cep) await this.enderecoPorCep();
 
-        return prisma.hospede.update({
+        return prisma.hospedes.update({
             where: { id: this.id },
             data: {
                 nome: this.nome,
@@ -142,7 +142,7 @@ export default class HospedeModel {
         if (this.ativo == false) {
             throw new Error('Operação não permitida: cliente inativo');
         }
-        return prisma.hospede.delete({ where: { id: this.id } });
+        return prisma.hospedes.delete({ where: { id: this.id } });
     }
 
     static async buscarTodos(filtros = {}) {
@@ -179,11 +179,11 @@ export default class HospedeModel {
             where.ativo = filtros.ativo === 'true';
         }
 
-        return prisma.hospede.findMany({ where });
+        return prisma.hospedes.findMany({ where });
     }
 
     static async buscarPorId(id) {
-        const data = await prisma.hospede.findUnique({ where: { id } });
+        const data = await prisma.hospedes.findUnique({ where: { id } });
         if (!data) {
             return null;
         }
@@ -194,6 +194,6 @@ export default class HospedeModel {
         if (this.ativo == false) {
             throw new Error('Operação não permitida: cliente inativo');
         }
-        return prisma.hospede.delete({ where: { id: this.id } });
+        return prisma.hospedes.delete({ where: { id: this.id } });
     }
 }
