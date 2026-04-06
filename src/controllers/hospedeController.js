@@ -8,13 +8,22 @@ export const criar = async (req, res) => {
             return res.status(400).json({ error: 'Corpo da requisição vazio. Envie os dados!' });
         }
 
-        const { nome, estado, preco } = req.body;
+        const { nome, email, telefone, cep, ativo } = req.body;
 
         if (!nome){
             return res.status(400).json({ error: 'O campo "nome" é obrigatório!' });
         }
-        if (preco === undefined || preco === null) {
-            return res.status(400).json({ error: 'O campo "preco" é obrigatório!' });
+        if (!email){
+            return res.status(400).json({ error: 'O campo "email" é obrigatório!' });
+        }
+        if (!telefone){
+            return res.status(400).json({ error: 'O campo "telefone" é obrigatório!' });
+        }
+        if (!cep){
+            return res.status(400).json({ error: 'O campo "cep" é obrigatório!' });
+        }
+        if (ativo === undefined && typeof ativo !== 'boolean') {
+            return res.status(400).json({ error: 'O campo "ativo" deve ser boolean!' });
         }
 
         const hospede = new HospedeModel({ nome, estado, preco: parseFloat(preco) });
@@ -29,16 +38,16 @@ export const criar = async (req, res) => {
 
 export const buscarTodos = async (req, res) => {
     try {
-        const registros = await HospedeModel.buscarTodos(req.query);
+        const hospedes = await HospedeModel.buscarTodos(req.query);
 
-        if (!registros || registros.length === 0) {
-            return res.status(400).json({ message: 'Nenhum registro encontrado.' });
+        if (!hospedes || hospedes.length === 0) {
+            return res.status(400).json({ message: 'Nenhum hospedes encontrado.' });
         }
 
-        return res.status(200).json(registros);
+        return res.status(200).json(hospedes);
     } catch (error) {
         console.error('Erro ao buscar:', error);
-        return res.status(500).json({ error: 'Erro ao buscar registros.' });
+        return res.status(500).json({ error: 'Erro ao buscar hospedes.' });
     }
 };
 
@@ -53,13 +62,13 @@ export const buscarPorId = async (req, res) => {
         const hospede = await HospedeModel.buscarPorId(parseInt(id));
 
         if (!hospede) {
-            return res.status(404).json({ error: 'Registro não encontrado.' });
+            return res.status(404).json({ error: 'Hospede não encontrado.' });
         }
 
         return res.status(200).json({ data: hospede });
     } catch (error) {
         console.error('Erro ao buscar:', error);
-        return res.status(500).json({ error: 'Erro ao buscar registro.' });
+        return res.status(500).json({ error: 'Erro ao buscar hospede.' });
     }
 };
 
@@ -78,17 +87,16 @@ export const atualizar = async (req, res) => {
         const hospede = await HospedeModel.buscarPorId(parseInt(id));
 
         if (!hospede) {
-            return res.status(404).json({ error: 'Registro não encontrado para atualizar.' });
+            return res.status(404).json({ error: 'Hospede não encontrado para atualizar.' });
         }
-
         if (req.body.nome !== undefined) {
             hospede.nome = req.body.nome;
         }
-        if (req.body.estado !== undefined) {
-            hospede.estado = req.body.estado;
+        if (req.body.email !== undefined) {
+            hospede.email = req.body.email;
         }
-        if (req.body.preco !== undefined) {
-            hospede.preco = parseFloat(req.body.preco);
+        if (req.body.telefone !== undefined) {
+            hospede.telefone = req.body.telefone;
         }
 
         const data = await hospede.atualizar();
@@ -96,7 +104,7 @@ export const atualizar = async (req, res) => {
         return res.status(200).json({ message: `O registro "${data.nome}" foi atualizado com sucesso!`, data });
     } catch (error) {
         console.error('Erro ao atualizar:', error);
-        return res.status(500).json({ error: 'Erro ao atualizar registro.' });
+        return res.status(500).json({ error: 'Erro ao atualizar hospede.' });
     }
 };
 
@@ -111,14 +119,14 @@ export const deletar = async (req, res) => {
         const hospede = await HospedeModel.buscarPorId(parseInt(id));
 
         if (!hospede) {
-            return res.status(404).json({ error: 'Registro não encontrado para deletar.' });
+            return res.status(404).json({ error: 'Hospede não encontrado para deletar.' });
         }
 
         await hospede.deletar();
 
-        return res.status(200).json({ message: `O registro "${hospede.nome}" foi deletado com sucesso!`, deletado: hospede });
+        return res.status(200).json({ message: `O hospede "${hospede.nome}" foi deletado com sucesso!`, deletado: hospede });
     } catch (error) {
         console.error('Erro ao deletar:', error);
-        return res.status(500).json({ error: 'Erro ao deletar registro.' });
+        return res.status(500).json({ error: 'Erro ao deletar hospede.' });
     }
 };
