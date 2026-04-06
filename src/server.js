@@ -1,6 +1,7 @@
 import express from "express";
 import "dotenv/config";
 import quartosRoutes from "./routes/quartosRoutes.js";
+import hospedesRoutes from "./routes/hospedeRoute.js";
 import docApiSwagger from "express-jsdoc-swagger";
 
 import pdfRoute from "./routes/pdfRoutes.js";
@@ -26,7 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/quartos", quartosRoutes);
-
+app.use("/", hospedesRoutes);
 app.use("/quartos", pdfRoute);
 app.use("/", express.static("uploads"));
 
