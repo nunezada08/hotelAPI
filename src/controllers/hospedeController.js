@@ -8,10 +8,10 @@ import HospedeModel from "../models/HospedeModel.js";
  */
 
 /**
- * 
- * @param {*} req 
- * @param {*} res 
- * @returns 
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
  */
 
 export const criar = async (req, res) => {
@@ -22,7 +22,7 @@ export const criar = async (req, res) => {
         .json({ error: "Corpo da requisição vazio. Envie os dados!" });
     }
 
-    const { nome, email, telefone, cep, ativo } = req.body;
+    const { nome, email, telefone, cep, logradouro, bairro, localidade, uf, ativo } = req.body;
 
     if (!nome) {
       return res.status(400).json({ error: 'O campo "nome" é obrigatório!' });
@@ -32,25 +32,30 @@ export const criar = async (req, res) => {
       return res.status(400).json({ error: 'O campo "email" é obrigatório!' });
     }
 
-    if (!telefone) {
-      return res
-        .status(400)
-        .json({ error: 'O campo "telefone" é obrigatório!' });
-    }
-    if (!cep) {
-      return res.status(400).json({ error: 'O campo "cep" é obrigatório!' });
-    }
-    if (ativo === undefined && typeof ativo !== "boolean") {
+      if (!telefone) {
+          return res
+              .status(400)
+              .json({ error: 'O campo "telefone" é obrigatório!' });
+      }
+
+    if (ativo !== undefined && typeof ativo !== "boolean") {
       return res
         .status(400)
         .json({ error: 'O campo "ativo" deve ser boolean!' });
     }
 
     const hospede = new HospedeModel({
-      nome,
-      estado,
-      preco: parseFloat(preco),
+        nome,
+        email,
+        telefone,
+        cep,
+        logradouro,
+        bairro,
+        localidade,
+        uf,
+        ativo,
     });
+
     const data = await hospede.criar();
 
     return res
