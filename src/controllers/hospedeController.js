@@ -1,4 +1,5 @@
 import HospedeModel from "../models/HospedeModel.js";
+import prisma from "../utils/prismaClient.js";
 
 /**
  * @typedef {object} reqBodyHospede
@@ -55,8 +56,11 @@ export const criar = async (req, res) => {
 
     const hospede = new HospedeModel({
       nome,
-      estado,
-      preco: parseFloat(preco),
+      email,
+      telefone,
+      cep,
+      ativo
+
     });
     const data = await hospede.criar();
 
@@ -191,7 +195,7 @@ export const atualizar = async (req, res) => {
     return res
       .status(200)
       .json({
-        message: O registro "${data.nome}" foi atualizado com sucesso!,
+        message:` O registro "${data.nome}" foi atualizado com sucesso!`,
         data,
       });
   } catch (error) {
@@ -234,7 +238,7 @@ export const deletar = async (req, res) => {
     return res
       .status(200)
       .json({
-        message: O hospede "${hospede.nome}" foi deletado com sucesso!,
+        message: `O hospede "${hospede.nome}" foi deletado com sucesso!`,
         deletado: hospede,
       });
   } catch (error) {
