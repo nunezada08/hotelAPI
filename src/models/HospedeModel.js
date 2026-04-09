@@ -58,7 +58,7 @@ export default class HospedeModel {
             throw new Error('O campo "cep" deve conter 8 dígitos numericos.');
         }
 
-        if (this.localidade) {
+        if (!this.localidade) {
             throw new Error('O campo "localidade" é obrigatório.');
         }
 
@@ -138,12 +138,6 @@ export default class HospedeModel {
         });
     }
 
-    async deletar() {
-        if (this.ativo == false) {
-            throw new Error('Operação não permitida: cliente inativo');
-        }
-        return prisma.hospedes.delete({ where: { id: this.id } });
-    }
 
     static async buscarTodos(filtros = {}) {
         const where = {};
@@ -191,9 +185,7 @@ export default class HospedeModel {
     }
 
     async deletar() {
-        if (this.ativo == false) {
-            throw new Error('Operação não permitida: cliente inativo');
-        }
+
         return prisma.hospedes.delete({ where: { id: this.id } });
     }
 }

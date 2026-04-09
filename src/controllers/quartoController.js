@@ -71,7 +71,7 @@ export const criar = async (req, res) => {
         .json({ error: "Corpo da requisição vazio. Envie os dados!" });
     }
 
-    const { nome, estado, preco } = req.body;
+    const { nome, descricao, categoria, preco, disponivel, hospedeId } = req.body;
 
     if (!nome) {
       return res
@@ -87,8 +87,22 @@ export const criar = async (req, res) => {
       return res.status(400).json({ error: 'O campo "preco" é obrigatório!' });
     }
 
-    const quarto = new QuartosModel({ nome, estado, preco: parseFloat(preco) });
+    const quarto = new QuartosModel({ 
+      nome, 
+      descricao, 
+      categoria,
+      preco: parseFloat(preco),
+      disponivel: disponivel,
+      hospedeId: hospedeId ? parseInt(hospedeId) : null
+    });
+
     const data = await quarto.criar();
+
+    return res.status(201).json({
+      message: "Quarto criado com sucesso!",
+      data: data
+    });
+    
     console.error("Erro ao criar:", error);
     return res
       .status(500)
@@ -219,7 +233,7 @@ export const atualizar = async (req, res) => {
     return res
       .status(200)
       .json({
-        message: O registro "${data.nome}" foi atualizado com sucesso!,
+        message: `O registro "${data.nome}" foi atualizado com sucesso!`,
         data,
       });
   } catch (error) {
@@ -262,7 +276,7 @@ export const deletar = async (req, res) => {
     return res
       .status(200)
       .json({
-        message: O registro "${exemplo.nome}" foi deletado com sucesso!,
+        message:` O registro "${exemplo.nome}" foi deletado com sucesso!`,
         deletado: exemplo,
       });
   } catch (error) {
